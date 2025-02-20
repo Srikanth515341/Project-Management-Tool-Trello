@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react";
-import { fetchProjects, createProject, fetchTasks, createTask, updateTaskStatus, deleteTask } from "./api";
+import {
+  fetchProjects,
+  createProject,
+  fetchTasks,
+  createTask,
+  updateTaskStatus,
+  deleteTask,
+} from "./api";
+import "./App.css";
 
 function App() {
   const [projects, setProjects] = useState([]);
   const [tasks, setTasks] = useState({});
   const [newProject, setNewProject] = useState({ name: "", description: "" });
-  const [newTask, setNewTask] = useState({ title: "", description: "", projectId: "" });
+  const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    projectId: "",
+  });
 
-  // Fetch projects when the app loads
   useEffect(() => {
     const getProjects = async () => {
       const data = await fetchProjects();
@@ -16,7 +27,6 @@ function App() {
     getProjects();
   }, []);
 
-  // Fetch tasks when a project is loaded
   useEffect(() => {
     projects.forEach((project) => {
       fetchTasks(project._id).then((data) => {
@@ -25,40 +35,28 @@ function App() {
     });
   }, [projects]);
 
-  // Handle form submission to create a new project
   const handleProjectSubmit = async (e) => {
     e.preventDefault();
-    if (!newProject.name.trim()) return; // Prevent empty project
     const createdProject = await createProject(newProject);
     if (createdProject) {
-      setProjects([...projects, createdProject]); // Update UI
-      setNewProject({ name: "", description: "" }); // Clear form
+      setProjects([...projects, createdProject]);
+      setNewProject({ name: "", description: "" });
     }
   };
 
-  // Handle form submission to create a new task
   const handleTaskSubmit = async (e) => {
     e.preventDefault();
-    if (!newTask.title.trim() || !newTask.projectId) return; // Prevent empty tasks
-
     const createdTask = await createTask(newTask);
     if (createdTask) {
-      setTasks((prevTasks) => ({
-        ...prevTasks,
-        [newTask.projectId]: [...(prevTasks[newTask.projectId] || []), createdTask],
-      }));
-      setNewTask({ title: "", description: "", projectId: "" }); // Clear form
+      setTasks({
+        ...tasks,
+        [newTask.projectId]: [...(tasks[newTask.projectId] || []), createdTask],
+      });
+      setNewTask({ title: "", description: "", projectId: "" });
     }
   };
 
-  // Handle updating task status
   const handleTaskStatusChange = async (taskId, status) => {
-    if (!taskId) {
-      console.error("Error: Task ID is missing!");
-      return;
-    }
-    console.log("Updating Task ID:", taskId, "New Status:", status); // Debugging
-
     const updatedTask = await updateTaskStatus(taskId, status);
     if (updatedTask) {
       setTasks((prevTasks) =>
@@ -72,12 +70,7 @@ function App() {
     }
   };
 
-  // Handle deleting a task
   const handleDeleteTask = async (taskId, projectId) => {
-    if (!taskId) {
-      console.error("Error: Task ID is missing!");
-      return;
-    }
     const success = await deleteTask(taskId);
     if (success) {
       setTasks((prevTasks) => ({
@@ -88,64 +81,64 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Project Management Tool</h1>
+    <div className="app-container">
+      <h1 className="app-title">Project Management Tool</h1>
 
-      {/* Form to create a new project */}
-      <form onSubmit={handleProjectSubmit}>
+      <form className="project-form" onSubmit={handleProjectSubmit}>
         <input
           type="text"
           placeholder="Project Name"
           value={newProject.name}
-          onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+          onChange={(e) =>
+            setNewProject({ ...newProject, name: e.target.value })
+          }
           required
         />
         <input
           type="text"
           placeholder="Description"
           value={newProject.description}
-          onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+          onChange={(e) =>
+            setNewProject({ ...newProject, description: e.target.value })
+          }
         />
-        <button type="submit">Create Project</button>
+        <button type="submit" className="btn-primary">Create Project</button>
       </form>
 
-      {/* Display projects and tasks */}
       <h2>Projects</h2>
       {projects.map((project) => (
-        <div key={project._id} style={{ border: "1px solid #ccc", padding: "10px", margin: "10px 0" }}>
+        <div key={project._id} className="project-container">
           <h3>{project.name}</h3>
           <p>{project.description}</p>
 
-          {/* Form to add tasks */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleTaskSubmit(e);
-            }}
-          >
+          <form className="task-form" onSubmit={handleTaskSubmit}>
             <input
               type="text"
               placeholder="Task Title"
               value={newTask.title}
-              onChange={(e) => setNewTask({ ...newTask, title: e.target.value, projectId: project._id })}
+              onChange={(e) =>
+                setNewTask({ ...newTask, title: e.target.value, projectId: project._id })
+              }
               required
             />
             <input
               type="text"
               placeholder="Task Description"
               value={newTask.description}
-              onChange={(e) => setNewTask({ ...newTask, description: e.target.value, projectId: project._id })}
+              onChange={(e) =>
+                setNewTask({ ...newTask, description: e.target.value, projectId: project._id })
+              }
             />
-            <button type="submit">Add Task</button>
+            <button type="submit" className="btn-secondary">Add Task</button>
           </form>
 
-          {/* Display tasks */}
           <h4>Tasks</h4>
-          <ul>
+          <ul className="task-list">
             {(tasks[project._id] || []).map((task) => (
-              <li key={task._id}>
-                <strong>{task.title}</strong> - {task.description}  
+              <li key={task._id} className="task-item">
+                <strong>{task.title}</strong> - {task.description}
                 <select
+                  className="task-status"
                   value={task.status}
                   onChange={(e) => handleTaskStatusChange(task._id, e.target.value)}
                 >
@@ -153,7 +146,12 @@ function App() {
                   <option value="in-progress">In Progress</option>
                   <option value="done">Done</option>
                 </select>
-                <button onClick={() => handleDeleteTask(task._id, project._id)}>Delete</button>
+                <button
+                  className="btn-delete"
+                  onClick={() => handleDeleteTask(task._id, project._id)}
+                >
+                  Delete
+                </button>
               </li>
             ))}
           </ul>

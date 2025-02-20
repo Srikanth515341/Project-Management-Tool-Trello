@@ -1,42 +1,116 @@
-#root {
-  max-width: 1280px;
+/* General Page Styling */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Main Container */
+.container {
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+h1 {
   text-align: center;
+  font-size: 2rem;
+  color: #007bff;
+  margin-bottom: 20px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+h2 {
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Project and Task Input Fields */
+input {
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+button {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.card {
-  padding: 2em;
+/* Create Project & Add Task Button */
+button.create-btn, button.task-btn {
+  background-color: #007bff;
+  color: white;
 }
 
-.read-the-docs {
-  color: #888;
+button.create-btn:hover, button.task-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Task List */
+.task-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-item strong {
+  flex-grow: 1;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Task Status Dropdown */
+select {
+  padding: 8px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Delete Button */
+button.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  font-weight: bold;
+}
+
+button.delete-btn:hover {
+  background-color: #a71d2a;
+}
+
+/* Drag Handle */
+.drag-handle {
+  cursor: grab;
+  margin-right: 10px;
+}
+
+/* Dragging Effect */
+.dragging {
+  opacity: 0.5;
+  transform: scale(1.05);
+  transition: 0.2s ease-in-out;
 }
