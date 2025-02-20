@@ -26,3 +26,8 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+const projectRoutes = require("./routes/projectRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+
+app.use("/api/projects", projectRoutes);
+app.use("/api/tasks", taskRoutes);
